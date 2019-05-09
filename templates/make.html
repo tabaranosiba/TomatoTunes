@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div id='create_container'>
+    <div class = 'col-md-12'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h1>Make a Tomato Playlist!</h1>
+            </div>
+        </div>
+        <div class = 'row'>
+            <!-- First column -->
+            <div class='col-md-4'>
+                <!-- Search area -->
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="search_query" placeholder="Search">
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id='submit' type="button">Search</button>
+                    </div>
+                </form>
+                <!-- Search results -->
+                <div id='results'>
+                    
+                </div>
+            </div>
+
+            <!-- Second column: Tomato Droppable -->
+            <div class ='col-md-4'>
+                <div class="tomato">
+                </div>
+                <div class ='length_tracker'>
+                </div>
+            </div>
+
+            <!-- Third column: Songs added -->
+            <div class ='col-md-4'>
+                <div class="form-group">
+                        <input type="text" class="form-control" id="playlist_name" placeholder="Playlist Name">
+                    </div>
+                <div id="songs">
+                </div>
+                    <button class="btn btn-outline-success" id='done'>Done!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

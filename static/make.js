@@ -1,0 +1,229 @@
+var time_left = 0
+
+var search = function(input){
+    var input_to_search = input
+    $.ajax({
+        type: "POST",
+        url: "search",                
+        dataType : "json",
+        contentType: "text; charset=utf-8",
+        data : input_to_search.toString(),
+        success: function(result){
+            var search = result["search"]
+            console.log("Results from search algorithm:" + search)
+            display_results(search)
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+        }
+    });
+}
+
+var display_results = function(matches){
+    clear_results()
+    $.each(matches, function(index, value){
+        var title = value['title']
+        var id = value['id']
+        var artist = value['artist']
+        var audio = value['song']
+        
+        var row = $("<div class = 'result' id='" + id + "'>")
+        var song = $("<div class='song'>")
+        var title_info = $("<p class='title'>"+ title + "</p>")
+        var artist_info = $("<p class='artist'>"+ artist + "</p>")
+        var audio_info = $("<audio controls><source src='" + audio + "' type='audio/ogg' </audio>")
+        $(song).append(id, title_info, artist_info, audio_info)
+        $(song).append("</div>")
+        $(row).append(song)
+        $('#results').append(row)
+        $('#results').append('</div>')
+        
+        $('.result').draggable({
+            mouse: "move",
+            stack: ".result",
+            revert: "invalid",
+            helper: "clone"
+        });
+    })
+}
+
+var clear_results = function(){
+    $('#results').empty()
+}
+
+var search_for_playlist = function(input){
+    var input_to_search = input
+    $.ajax({
+        type: "POST",
+        url: "search_selected",                
+        dataType : "json",
+        contentType: "text; charset=utf-8",
+        data : input_to_search.toString(),
+        success: function(result){
+            var search = result["selected_results"]
+            console.log("Current selected playlist: " + search)
+            display_playlist(search)
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+        }
+    });
+}
+
+var display_playlist = function(selected){
+    $.each(selected, function(index, value){
+        var title = value['title']
+        var artist = value['artist']
+        var audio = value['song']
+        var id = value['id']
+        
+        var row = $("<div class = 'result' id=>")
+        var song = $("<div class='song'>")
+        var title_info = $("<p class='title'>"+ title + "</p>")
+        var artist_info = $("<p class='artist'>"+ artist + "</p>")
+        var audio_info = $("<audio controls><source src='" + audio + "' type='audio/ogg' </audio>")
+        var delete_button = $("<button type='button' class='delete' id='" + id +"'>Remove</button>")
+        $(song).append(title_info, artist_info, audio_info, delete_button)
+        $(song).append("</div>")
+        $(row).append(song)
+        $('#songs').append(row)
+        $('#songs').append('</div>')
+        
+        $('.result').draggable({
+            mouse: "move",
+            stack: ".result",
+            revert: "invalid"
+        });
+    })
+}
+
+var clear_selected = function(){
+    $('#songs').empty()
+}
+
+var save_playlist = function(playlist_name){
+    var name = playlist_name
+    $.ajax({
+        type: "POST",
+        url: "save",                
+        dataType : "json",
+        contentType: "text; charset=utf-8",
+        data: playlist_name.toString(),
+        success: function(){
+            console.log("Successfully saved new playlist")
+            window.location.href = "show_tomatoes"
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+        }
+    });
+}
+
+var remove_selected = function(id){
+    var identifier = id
+    $.ajax({
+        type: "POST",
+        url: "remove_selected",                
+        dataType : "json",
+        contentType: "text; charset=utf-8",
+        data: identifier.toString(),
+        success: function(result){
+            var results = result['selected_results']
+            display_playlist(results)
+            console.log("Successfully deleted")
+            console.log(results)
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+        }
+    });
+}
+
+var display_time_left = function(length_of_playlist, id){
+    var identifier = id
+    var max_seconds = 1500
+    var min_seconds = 1200
+    var length_of_playlist = length_of_playlist
+    if(length_of_playlist <= max_seconds){
+        time_left = max_seconds - length_of_playlist
+        console.log(time_left)
+        $('.length_tracker').empty()
+        $('.length_tracker').append('<p>Time left to add: ' + Math.floor(time_left/60) + ":" + (time_left % 60 ? time_left % 60 : '00') + '</p>')
+        clear_selected()
+        search_for_playlist(identifier)
+    }
+    else{
+        alert("This exceeds the playlist limit")
+    }
+    
+
+}
+
+var calculate_time = function(id) {
+    var identifier = id
+    $.ajax({
+        type: "POST",
+        url: "calculate_time",                
+        dataType : "json",
+        contentType: "text; charset=utf-8",
+        data: identifier.toString(),
+        success: function(result){
+            var length_of_playlist = result['playlist_length']
+            console.log("Successfully updated time")
+            console.log(length_of_playlist)
+            display_time_left(length_of_playlist, identifier)  
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+        }
+    });
+}
+
+
+$(document).ready(function(){
+    $('#submit').click(function(){
+        var query = $('#search_query').val()
+        console.log("Query: " + query)
+        if (query = ""){
+            alert("You must enter a valid search input")
+        }
+        else{
+            search(query)
+        }
+    })
+    $('.tomato').droppable({
+        accept: ".result",
+        hoverClass: "hover_drop",
+        drop: function(event, ui){
+            $('#songs').empty()
+            var dropped_song = ui.draggable.attr("id")
+            dropped_song = Number(dropped_song)
+            console.log(dropped_song)
+            calculate_time(dropped_song)
+        }
+    })
+    $('.delete').click(function(){
+        console.log('The index of the delete button is: ')
+    })
+    var playlist_name = $('#playlist_name').val()
+    $('#done').click(function(){
+        console.log(playlist_name)
+        save_playlist(playlist_name)
+    })
+
+})

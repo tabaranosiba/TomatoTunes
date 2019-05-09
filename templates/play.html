@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class='container'>
+    <div class = 'col-md-12'>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h1>25 Minute Playlist</h1>
+            </div>
+        </div>
+        <div class = 'row'>
+            <!-- First column -->
+            <div class='col-md-8'>
+                <!-- Audio player -->
+                <div id='audio'>
+                    <audio controls>
+                        <source src="/static/audio_files/Hawktail-In_The_Kitchen.mp3" type="audio/mpeg">
+                        <source src="/static/audio_files/Hawktail-Unless.mp3" type="audio/mpeg">
+                        <source src="/static/audio_files/Olafur_Arnalds-0952.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+            <!-- Second column -->
+            <div class='col-md-4'>
+                <!-- Playlists -->
+                <div id='playlists'>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

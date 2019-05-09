@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!-- JQuery -->
+	<script src= "http://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src= "https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+	<link rel= "stylesheet" href= "http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src="{{ url_for('static', filename = 'make.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'playlists.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'play.js') }}"></script>
+
+    <script>
+        var song_database = {{song_database|tojson}}
+        var selected_results = {{selected_results|tojson}}
+        var playlists = {{playlists|tojson}}
+        var playlist_id = {{playlist_id|tojson}}
+        var playlist_length = {{playlist_length|tojson}}
+    </script>
+    
+
+    <style>
+        #create_container{
+            padding-top: 50px;
+        }
+        form{
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        #search_container{
+            padding-top: 50px;
+        }
+        .col-md-2.result_image{
+            padding-top: 10px;
+		    padding-right: 2px;
+		    padding-left: 0px;
+		    width: 100%;
+        }
+        .tomato {
+            height: 400px;
+            width: 100%;
+            background-color: rgb(175, 37, 37);
+            border-radius: 50%;
+            display: inline-block;
+            padding-left: 20%;
+            padding-top: 15%;
+        }
+        .result {
+            border: solid;
+            color: black;
+        }
+        .row.playlist{
+            border: solid;
+            color: black;
+        }
+        .result:hover{
+            background-color:#FFFF99; 
+            cursor: move;
+        }
+
+        .result:active{
+            background-color:#FFFF99; 
+            cursor: move;
+        }
+        #results{
+            padding-top: 2px;
+        }
+        /* .navbar{
+            padding: 20px;
+        } */
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Tomato Tunes</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="make_tomato">Make a Tomato</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="show_tomatoes">My Tomatoes</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class='container'>
+        {% block content %}
+ 
+
+        {% endblock %}
+    </div>
+</body>
+</html>
