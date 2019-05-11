@@ -1,4 +1,7 @@
-var time_left = 0
+var time_left = 0;
+var playlist_length = 0; 
+var max_seconds = 1500;
+var min_seconds = 1200;
 
 var search = function(input){
     var input_to_search = input
@@ -115,8 +118,10 @@ var save_playlist = function(playlist_name){
         dataType : "json",
         contentType: "text; charset=utf-8",
         data: playlist_name.toString(),
-        success: function(){
+        success: function(result){
             console.log("Successfully saved new playlist")
+            var new_playlists = result['playlists']
+            console.log(new_playlists)
             window.location.href = "show_tomatoes"
         },
         error: function(request, status, error){
@@ -151,47 +156,44 @@ var remove_selected = function(id){
     });
 }
 
-var display_time_left = function(length_of_playlist, id){
-    var identifier = id
-    var max_seconds = 1500
-    var min_seconds = 1200
+var display_time_left = function(length_of_playlist){
     var length_of_playlist = length_of_playlist
-    if(length_of_playlist <= max_seconds){
-        time_left = max_seconds - length_of_playlist
-        console.log(time_left)
-        $('.length_tracker').empty()
-        $('.length_tracker').append('<p>Time left to add: ' + Math.floor(time_left/60) + ":" + (time_left % 60 ? time_left % 60 : '00') + '</p>')
-        clear_selected()
-        search_for_playlist(identifier)
-    }
-    else{
-        alert("This exceeds the playlist limit")
-    }
-    
-
+    time_left = max_seconds - length_of_playlist
+    console.log(time_left)
+    $('.length_tracker').empty()
+    $('.length_tracker').append('<p>Time left to add: ' + Math.floor(time_left/60) + ":" + (time_left % 60 ? time_left % 60 : '00') + '</p>')
+    clear_selected()
 }
 
 var calculate_time = function(id) {
     var identifier = id
-    $.ajax({
-        type: "POST",
-        url: "calculate_time",                
-        dataType : "json",
-        contentType: "text; charset=utf-8",
-        data: identifier.toString(),
-        success: function(result){
-            var length_of_playlist = result['playlist_length']
-            console.log("Successfully updated time")
-            console.log(length_of_playlist)
-            display_time_left(length_of_playlist, identifier)  
-        },
-        error: function(request, status, error){
-            console.log("Error");
-            console.log(request)
-            console.log(status)
-            console.log(error)
+    $.each(song_database, function(key, value){
+        if(value['id'] == identifier){
+            var song_length = value['length']
+            playlist_length += song_length
+            display_time_left(playlist_length)
+            search_for_playlist(identifier)
         }
-    });
+    })
+    // $.ajax({
+    //     type: "POST",
+    //     url: "calculate_time",                
+    //     dataType : "json",
+    //     contentType: "text; charset=utf-8",
+    //     data: identifier.toString(),
+    //     success: function(result){
+    //         var length_of_playlist = result['playlist_length']
+    //         console.log("Successfully updated time")
+    //         console.log(length_of_playlist)
+    //         display_time_left(length_of_playlist, identifier)  
+    //     },
+    //     error: function(request, status, error){
+    //         console.log("Error");
+    //         console.log(request)
+    //         console.log(status)
+    //         console.log(error)
+    //     }
+    // });
 }
 
 
@@ -213,15 +215,18 @@ $(document).ready(function(){
             $('#songs').empty()
             var dropped_song = ui.draggable.attr("id")
             dropped_song = Number(dropped_song)
-            console.log(dropped_song)
+            console.log("Dropped song id: " + dropped_song)
             calculate_time(dropped_song)
+            if((playlist_length <= max_seconds) && (playlist_length >= min_seconds)){
+                $('#done').prop('disabled', false)
+            }
+            else{
+                $('#done').prop('disabled', true)
+            }
         }
     })
-    $('.delete').click(function(){
-        console.log('The index of the delete button is: ')
-    })
-    var playlist_name = $('#playlist_name').val()
     $('#done').click(function(){
+        var playlist_name = $('#playlist_name').val()
         console.log(playlist_name)
         save_playlist(playlist_name)
     })
