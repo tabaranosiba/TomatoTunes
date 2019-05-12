@@ -5,21 +5,27 @@
     <div class = 'col-md-12'>
         <div class='row'>
             <div class='col-md-12'>
-                <h1>Make a Tomato Playlist!</h1>
+                <ul class="progressbar">
+                    <li class="active">Create Playlist</li>
+                    <li>Select Playlist</li>
+                    <li>Study Session</li>
+                </ul>
             </div>
         </div>
-        <div class = 'row'>
+        <div class = 'row create'>
             <!-- First column -->
             <div class='col-md-4'>
                 <!-- Search area -->
-                <form>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="search_query" placeholder="Search">
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id='submit' type="button">Search</button>
-                    </div>
-                </form>
+                <label class="mr-sm-2" for="inlineFormCustomSelect">Music Genre</label>
+                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                    <option selected>Choose...</option>
+                    <option value="1">Instrumental</option>
+                    <option value="2">Lo-Fi Hip Hop</option>
+                    <option value="3">Jazz</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id='submit' type="button">Search</button>
+                </div>
                 <!-- Search results -->
                 <div id='results'>
                     
@@ -28,8 +34,9 @@
 
             <!-- Second column: Tomato Droppable -->
             <div class ='col-md-4'>
-                <div class="tomato">
-                </div>
+                <!-- <div class="tomato"> -->
+                    <img class='tomato' src='/static/img/pngkey.com-tomato-png-54276.png'>
+                <!-- </div> -->
                 <div class ='length_tracker'>
                     Time left to add: 25:00
                 </div>
@@ -38,6 +45,7 @@
             <!-- Third column: Songs added -->
             <div class ='col-md-4'>
                 <div class="form-group">
+                        <label class="mr-sm-2" for="playlist_name">Playlist Name</label>
                         <input type="text" class="form-control" id="playlist_name" placeholder="Playlist Name">
                 </div>
                 <div id="songs">

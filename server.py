@@ -6,19 +6,19 @@ app = Flask(__name__)
 song_database = [
     {
         "id": 1,
-        "title": "In the Kitchen",
-        "artist": "Hawktail",
-        "song": "/static/audio_files/Hawktail-In_The_Kitchen.mp3",
+        "title": "Broom sounds",
+        "artist": "Abdulaziz",
+        "song": "/static/audio_files/sweeping_straw_broom-mike-koenig.mp3",
         "genre": "instrumental",
-        "length": 240
+        "length": 473
     },
     {
         "id": 2,
         "title": "Unless",
         "artist": "Hawktail",
-        "song": "/static/audio_files/Hawktail-Unless.mp3",
+        "song": "/static/audio_files/MP5_SMG-GunGuru-703432894.mp3",
         "genre": "instrumental",
-        "length": 240
+        "length": 325
     },
     {
         "id": 3,
@@ -26,7 +26,7 @@ song_database = [
         "artist": "Hawktail",
         "song": "/static/audio_files/Olafur_Arnalds-0952.mp3",
         "genre": "instrumental",
-        "length": 300
+        "length": 203
     }
 ]
 
@@ -35,6 +35,10 @@ selected_results = []
 current_id = len(playlists)
 playlist_id = 0
 # playlist_length = 0
+
+@app.route('/')
+def home():
+    return render_template("home.html", song_database=song_database, playlists=playlists, selected_results=selected_results, current_id=current_id, playlist_id=playlist_id)
 
 @app.route('/make_tomato')
 def make_tomato():
@@ -61,13 +65,21 @@ def search():
 
         input_string = request.data.decode("utf-8")
         # print(input_string)
-
-        for object in song_database:
-            for key, value in object.items():
-                if key != 'id' and key != 'img' and key != 'length':
-                    if input_string.lower() in value.lower() and object not in search:
+        if input_string == '1':
+            for object in song_database:
+                for key, value in object.items():
+                    if key == 'genre' and value == 'instrumental':
                         search.append(object)
-
+        if input_string == '2':
+            for object in song_database:
+                for key, value in object.items():
+                    if key == 'genre' and value == 'lo-fi':
+                        search.append(object)
+        if input_string == '3':
+            for object in song_database:
+                for key, value in object.items():
+                    if key == 'genre' and value == 'jazz':
+                        search.append(object)                             
         return jsonify(search = search)
     else:
         return render_template('make.html', song_database = song_database) 
@@ -144,38 +156,6 @@ def remove_selected():
                     selected_results.pop(object)
 
         return jsonify(selected_results = selected_results)
-
-# @app.route('/calculate_time', methods=['GET', 'POST'])
-# def calculate_time():
-#     global playlist_length
-#     max_length = 1500
-#     min_length = 1200
-#     song_length = 0
-
-#     if request.method == 'POST':
-#         input_string = request.data.decode("utf-8")
-#         input_id = int(input_string)
-#         for object in song_database:
-#             print(object)
-#             for key, value in object.items():
-#                 if key == 'id' and input_id == value:
-#                     print("This is the id: ")
-#                     print(value)
-#                 else:
-#                     break
-#                 if key == 'length':
-#                     print("This is the length: ")
-#                     print(value)
-#                     song_length = value
-#         print(song_length)
-#         playlist_length += song_length
-#         # for object in selected_results:
-#         #     for key, value in object.items():
-#         #         if key == 'length':
-#         #             length = value
-#         #             playlist_length += length
-#         print(playlist_length)
-#         return jsonify(playlist_length=playlist_length)
 
 
 if __name__ == '__main__':

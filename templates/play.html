@@ -1,26 +1,37 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class='container'>
+<div id='play_container'>
     <div class = 'col-md-12'>
         <div class='row'>
             <div class='col-md-12'>
-                <h1>25 Minute Playlist</h1>
+                <ul class="progressbar">
+                    <li>Create Playlist</li>
+                    <li>Select Playlist</li>
+                    <li class="active">Study Session</li>
+                </ul>
             </div>
         </div>
-        <div class = 'row'>
-            <!-- First column -->
+        <div class='row controls'>
+            <!-- First Column -->
+            <div class='col-md-4'>
+                <h1>25 Minute Playlist</h1>
+                <!-- <div id='playlist'>
+
+                </div> -->
+                <ul id='playlist'>
+                    
+                </ul>
+            </div>
+            <!-- Second column -->
             <div class='col-md-8'>
                 <!-- Audio player -->
                 <div id='audio'>
-                    <audio controls="controls" autoplay="autoplay" type="audio/mpeg"></audio>
-                </div>
-            </div>
-            <!-- Second column -->
-            <div class='col-md-4'>
-                <!-- Playlists -->
-                <div id='playlist'>
-
+                    <audio id="audioPlayer">
+                    </audio>
+                      
+                    <button id="toggle"> Play</button>
+                      
                 </div>
             </div>
         </div>

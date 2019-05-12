@@ -38,7 +38,7 @@ var display_results = function(matches){
         var title_info = $("<p class='title'>"+ title + "</p>")
         var artist_info = $("<p class='artist'>"+ artist + "</p>")
         var audio_info = $("<audio controls><source src='" + audio + "' type='audio/ogg' </audio>")
-        $(song).append(id, title_info, artist_info, audio_info)
+        $(song).append(title_info, artist_info, audio_info)
         $(song).append("</div>")
         $(row).append(song)
         $('#results').append(row)
@@ -199,10 +199,10 @@ var calculate_time = function(id) {
 
 $(document).ready(function(){
     $('#submit').click(function(){
-        var query = $('#search_query').val()
+        var query = $('#inlineFormCustomSelect').val()
         console.log("Query: " + query)
-        if (query = ""){
-            alert("You must enter a valid search input")
+        if(query=="Choose..."){
+            alert("You must select a valid genre from the dropdown menu. Please try again.")
         }
         else{
             search(query)
